@@ -10,7 +10,10 @@ import React, { useState, useEffect } from 'react'
 import menus from '../../../config/menu'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/stores'
-
+import './index.css'
+import getAccessibleMenus from '@/access/menuAccess'
+import MdEditor from '@/components/MdEditor'
+import MdViewer from '@/components/MdViewer'
 const SearchInput = () => {
   return (
     <div
@@ -44,6 +47,7 @@ interface Props {
 export default function BasicLayout({ children }: Props) {
   const pathname = usePathname()
   const [mounted, setMounted] = useState(false)
+  const [text, setText] = useState('')
 
   const loginUser = useSelector((state: RootState) => state.loginUser)
   // 在客户端挂载后设置状态
@@ -75,6 +79,7 @@ export default function BasicLayout({ children }: Props) {
     <div
       id="basicLayout"
       style={{
+        minHeight: '100vh',
         height: '100vh',
         overflow: 'auto',
       }}
@@ -132,7 +137,7 @@ export default function BasicLayout({ children }: Props) {
         footerRender={() => <GlobalFooter />}
         onMenuHeaderClick={e => console.log(e)}
         menuDataRender={() => {
-          return menus
+          return getAccessibleMenus(loginUser, menus)
         }}
         menuItemRender={(item, dom) => (
           <Link href={item.path || '/'} target={item.target}>
@@ -141,6 +146,8 @@ export default function BasicLayout({ children }: Props) {
         )}
       >
         {children}
+        <MdEditor value={text} onChange={setText} />
+        <MdViewer value={text} />
       </ProLayout>
     </div>
   )

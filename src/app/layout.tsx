@@ -8,12 +8,17 @@ import store from '@/stores'
 import { Provider } from 'react-redux'
 import { getLoginUserUsingGet } from '@/api/userController'
 import { setLoginUser } from '@/stores/loginUser'
+import { usePathname } from 'next/navigation'
+import ACCESS_ENUM from '@/access/accessEnum'
+import AccessLayout from '@/access/AccessLayout'
 /**
  * 全局初始化逻辑
  * @param param0
  * @returns
  */
 const InitLayout: React.FC<Readonly<{ children: React.ReactNode }>> = ({ children }) => {
+  // 获取到当前路径
+  const pathname = usePathname()
   /**
    * 全局初始化函数，有全局单次调用的代码，都可以写到这里
    */
@@ -23,19 +28,14 @@ const InitLayout: React.FC<Readonly<{ children: React.ReactNode }>> = ({ childre
       // 更新全局用户状态
     } else {
       // 模拟登录
-      setTimeout(() => {
-        const testUser = {
-          userName: '测试用户',
-          userAvatar: '/assets/logo.png',
-          userRole: 'guest',
-        }
-        store.dispatch(setLoginUser(testUser))
-      }, 3000)
     }
   }, [])
 
   useEffect(() => {
-    doInitLoginUser()
+    // 登录和注册页面不进行获取登录信息
+    if (!pathname.startsWith('/user/login') && !pathname.startsWith('/user/register')) {
+      doInitLoginUser()
+    }
   }, [])
 
   return children
@@ -55,7 +55,10 @@ export default function RootLayout({
             {/* 初始化 */}
             <InitLayout>
               {/* 布局 */}
-              <BasicLayout>{children}</BasicLayout>
+              <BasicLayout>
+                {/* 全局权限校验器 */}
+                <AccessLayout>{children}</AccessLayout>
+              </BasicLayout>
             </InitLayout>
           </Provider>
         </AntdRegistry>
