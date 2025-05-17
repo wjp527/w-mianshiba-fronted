@@ -1,0 +1,4 @@
+::v-deep .ant-menu-item-selected {
+  color: skyblue !important;
+  background-color: pink !important;
+}
