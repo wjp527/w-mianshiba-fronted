@@ -48,14 +48,31 @@ interface Props {
 export default function BasicLayout({ children }: Props) {
   const pathname = usePathname()
   const [mounted, setMounted] = useState(false)
-  const [text, setText] = useState('')
 
+  const router = useRouter()
+  const dispatch = useDispatch<AppDispatch>()
   const loginUser = useSelector((state: RootState) => state.loginUser)
+
   // 在客户端挂载后设置状态
   useEffect(() => {
     setMounted(true)
   }, [])
 
+  /**
+   * 退出登录
+   */
+  const doUserLogout = async () => {
+    try {
+      await userLogoutUsingPost()
+      message.success('退出成功')
+      // 更新用户状态
+      dispatch(setLoginUser(DEFAULT_USER))
+      // 跳转至登录页面
+      router.replace('/user/login')
+    } catch (e: any) {
+      message.error('退出失败:' + e.message)
+    }
+  }
   // 初始渲染的简化版布局（服务端和客户端首次渲染都会使用这个）
   if (!mounted) {
     return (
@@ -75,24 +92,6 @@ export default function BasicLayout({ children }: Props) {
     )
   }
 
-  const router = useRouter()
-  const dispatch = useDispatch<AppDispatch>()
-
-  /**
-   * 退出登录
-   */
-  const doUserLogout = async () => {
-    try {
-      await userLogoutUsingPost()
-      message.success('退出成功')
-      // 更新用户状态
-      dispatch(setLoginUser(DEFAULT_USER))
-      // 跳转至登录页面
-      router.replace('/user/login')
-    } catch (e) {
-      message.error('退出失败:' + e.message)
-    }
-  }
   // 客户端完全挂载后的完整布局
   return (
     <div

@@ -27,7 +27,8 @@ const InitLayout: React.FC<Readonly<{ children: React.ReactNode }>> = ({ childre
   const doInitLoginUser = useCallback(async () => {
     const res = await getLoginUserUsingGet()
     if (res.data) {
-      // 更新全局用户状态
+      // 更新全局用户状态，将返回数据转换为需要的格式
+      const res = await getLoginUserUsingGet()
       dispatch(setLoginUser(res.data))
     } else {
       // 模拟登录
