@@ -6,7 +6,7 @@ import { PlusOutlined } from '@ant-design/icons'
 import type { ActionType, ProColumns } from '@ant-design/pro-components'
 import { PageContainer, ProTable } from '@ant-design/pro-components'
 
-import { Button, message, Space, Typography } from 'antd'
+import { Button, message, Popconfirm, PopconfirmProps, Space, Typography } from 'antd'
 import React, { useRef, useState } from 'react'
 import UploadPic from '@/components/UploadPic'
 import PICTURE_ENUM from '@/constant/PictureEnum'
@@ -30,7 +30,7 @@ const UserAdminPage: React.FC = () => {
    *
    * @param row
    */
-  const handleDelete = async (row: API.User) => {
+  const handleDelete: PopconfirmProps['onConfirm'] = async (row: API.User) => {
     const hide = message.loading('正在删除')
     if (!row) return true
     try {
@@ -140,9 +140,11 @@ const UserAdminPage: React.FC = () => {
           >
             修改
           </Typography.Link>
-          <Typography.Link type="danger" onClick={() => handleDelete(record)}>
-            删除
-          </Typography.Link>
+          {/* onConfirm={handleDelete(record)} */}
+
+          <Popconfirm title="是否要删除该用户" description="" onConfirm={() => handleDelete(record)} okText="Yes" cancelText="No">
+            <Typography.Link type="danger">删除</Typography.Link>
+          </Popconfirm>
         </Space>
       ),
     },
@@ -167,6 +169,14 @@ const UserAdminPage: React.FC = () => {
             <PlusOutlined /> 新建
           </Button>,
         ]}
+        /**
+         * 触发刷新的场景
+         * 1. 组件初始化
+         * 2. 分页参数变化
+         * 3. 排序条件变化
+         * 4. 过滤条件变化
+         * 5. 手动刷新
+         */
         request={async (params, sort, filter) => {
           const sortField = Object.keys(sort)?.[0]
           const sortOrder = sort?.[sortField] ?? undefined
