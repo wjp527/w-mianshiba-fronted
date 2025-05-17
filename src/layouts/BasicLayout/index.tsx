@@ -2,12 +2,14 @@
 import GlobalFooter from '@/components/GlobalFooter'
 import { GithubFilled, LogoutOutlined, SearchOutlined } from '@ant-design/icons'
 import { ProLayout } from '@ant-design/pro-components'
-import { Dropdown, Input, theme } from 'antd'
+import { Dropdown, Input } from 'antd'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import React, { useState, useEffect } from 'react'
 import menus from '../../../config/menu'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/stores'
 
 const SearchInput = () => {
   return (
@@ -43,6 +45,7 @@ export default function BasicLayout({ children }: Props) {
   const pathname = usePathname()
   const [mounted, setMounted] = useState(false)
 
+  const loginUser = useSelector((state: RootState) => state.loginUser)
   // 在客户端挂载后设置状态
   useEffect(() => {
     setMounted(true)
@@ -88,9 +91,9 @@ export default function BasicLayout({ children }: Props) {
           collapsedShowGroupTitle: true,
         }}
         avatarProps={{
-          src: 'https://gw.alipayobjects.com/zos/antfincdn/efFD%24IOql2/weixintupian_20170331104822.jpg',
+          src: loginUser.userAvatar || '/assets/logo.png',
           size: 'small',
-          title: '七妮妮',
+          title: loginUser.userName || '你过来啊',
           render: (props, dom) => {
             return (
               <Dropdown
