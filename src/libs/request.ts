@@ -1,3 +1,4 @@
+import { message } from "antd";
 import axios from "axios";
 
 // 创建 Axios 示例
@@ -36,7 +37,7 @@ myAxios.interceptors.response.use(
       }
     } else if (data.code !== 0) {
       // 其他错误
-      throw new Error(data.message ?? "服务器错误");
+      message.error(data.message ?? "服务器错误");
     }
     return data;
   },

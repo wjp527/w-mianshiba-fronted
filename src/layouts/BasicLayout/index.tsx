@@ -2,18 +2,19 @@
 import GlobalFooter from '@/components/GlobalFooter'
 import { GithubFilled, LogoutOutlined, SearchOutlined } from '@ant-design/icons'
 import { ProLayout } from '@ant-design/pro-components'
-import { Dropdown, Input } from 'antd'
+import { Dropdown, Input, message } from 'antd'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import React, { useState, useEffect } from 'react'
 import menus from '../../../config/menu'
-import { useSelector } from 'react-redux'
-import { RootState } from '@/stores'
+import { useDispatch, useSelector } from 'react-redux'
+import { AppDispatch, RootState } from '@/stores'
 import './index.css'
 import getAccessibleMenus from '@/access/menuAccess'
-import MdEditor from '@/components/MdEditor'
-import MdViewer from '@/components/MdViewer'
+import { userLogoutUsingPost } from '@/api/userController'
+import { useRouter } from 'next/navigation'
+import { DEFAULT_USER, setLoginUser } from '@/stores/loginUser'
 const SearchInput = () => {
   return (
     <div
@@ -74,6 +75,24 @@ export default function BasicLayout({ children }: Props) {
     )
   }
 
+  const router = useRouter()
+  const dispatch = useDispatch<AppDispatch>()
+
+  /**
+   * 退出登录
+   */
+  const doUserLogout = async () => {
+    try {
+      await userLogoutUsingPost()
+      message.success('退出成功')
+      // 更新用户状态
+      dispatch(setLoginUser(DEFAULT_USER))
+      // 跳转至登录页面
+      router.replace('/user/login')
+    } catch (e) {
+      message.error('退出失败:' + e.message)
+    }
+  }
   // 客户端完全挂载后的完整布局
   return (
     <div
@@ -100,7 +119,15 @@ export default function BasicLayout({ children }: Props) {
           size: 'small',
           title: loginUser.userName || '你过来啊',
           render: (props, dom) => {
+            if (!loginUser.id) {
+              return (
+                <Link href="/user/login" className="text-slate-400">
+                  {dom}
+                </Link>
+              )
+            }
             return (
+              // 添加点击事件
               <Dropdown
                 menu={{
                   items: [
@@ -108,6 +135,7 @@ export default function BasicLayout({ children }: Props) {
                       key: 'logout',
                       icon: <LogoutOutlined />,
                       label: '退出登录',
+                      onClick: doUserLogout,
                     },
                   ],
                 }}
@@ -146,8 +174,6 @@ export default function BasicLayout({ children }: Props) {
         )}
       >
         {children}
-        <MdEditor value={text} onChange={setText} />
-        <MdViewer value={text} />
       </ProLayout>
     </div>
   )

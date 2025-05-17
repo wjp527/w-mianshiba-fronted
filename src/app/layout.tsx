@@ -4,8 +4,8 @@ import './globals.css'
 import { AntdRegistry } from '@ant-design/nextjs-registry'
 import { useCallback, useEffect } from 'react'
 // 状态管理
-import store from '@/stores'
-import { Provider } from 'react-redux'
+import store, { AppDispatch } from '@/stores'
+import { Provider, useDispatch } from 'react-redux'
 import { getLoginUserUsingGet } from '@/api/userController'
 import { setLoginUser } from '@/stores/loginUser'
 import { usePathname } from 'next/navigation'
@@ -19,6 +19,8 @@ import AccessLayout from '@/access/AccessLayout'
 const InitLayout: React.FC<Readonly<{ children: React.ReactNode }>> = ({ children }) => {
   // 获取到当前路径
   const pathname = usePathname()
+  // 状态管理
+  const dispatch = useDispatch<AppDispatch>()
   /**
    * 全局初始化函数，有全局单次调用的代码，都可以写到这里
    */
@@ -26,6 +28,7 @@ const InitLayout: React.FC<Readonly<{ children: React.ReactNode }>> = ({ childre
     const res = await getLoginUserUsingGet()
     if (res.data) {
       // 更新全局用户状态
+      dispatch(setLoginUser(res.data))
     } else {
       // 模拟登录
     }

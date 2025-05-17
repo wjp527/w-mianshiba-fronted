@@ -1,9 +1,10 @@
-import './globals.css'
+import TailwindTest from '@/components/TailwindTest'
 
-export default async function HomePage() {
+export default function HomePage() {
   return (
-    <div id="homePage">
-      <h1>主页</h1>
+    <div id="homePage" className="p-4">
+      <h1 className="text-2xl font-bold">主页</h1>
+      <TailwindTest />
     </div>
   )
 }
