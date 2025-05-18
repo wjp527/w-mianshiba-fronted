@@ -18,7 +18,6 @@ export const loginUserSlice = createSlice({
   initialState: DEFAULT_USER,
   reducers: {
     setLoginUser: (state, action: PayloadAction<API.LoginUserVO>) => {
-      console.log(action, 'action')
       return {
         ...action.payload,
       }
