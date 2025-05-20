@@ -1,8 +1,8 @@
 'use client' // 客户端渲染
 import GlobalFooter from '@/components/GlobalFooter'
-import { GithubFilled, LogoutOutlined, SearchOutlined } from '@ant-design/icons'
+import { GithubFilled, LogoutOutlined } from '@ant-design/icons'
 import { ProLayout } from '@ant-design/pro-components'
-import { Dropdown, Input, message } from 'antd'
+import { Dropdown, message } from 'antd'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -15,25 +15,7 @@ import getAccessibleMenus from '@/access/menuAccess'
 import { userLogoutUsingPost } from '@/api/userController'
 import { useRouter } from 'next/navigation'
 import { DEFAULT_USER, setLoginUser } from '@/stores/loginUser'
-const SearchInput = () => {
-  return (
-    <div
-      key="SearchOutlined"
-      aria-hidden
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        marginInlineEnd: 24,
-      }}
-      onMouseDown={e => {
-        e.stopPropagation()
-        e.preventDefault()
-      }}
-    >
-      <Input prefix={<SearchOutlined />} placeholder="搜索题目" variant="borderless" />
-    </div>
-  )
-}
+import SearchInput from './components/SearchInput'
 
 interface Props {
   children: React.ReactNode
@@ -83,9 +65,9 @@ export default function BasicLayout({ children }: Props) {
           overflow: 'auto',
         }}
       >
-        <div style={{ padding: '20px', textAlign: 'center' }}>
+        <div className="flex items-center">
           <Image src="/assets/logo.png" width={32} height={32} alt="面试吧刷题平台" />
-          <span style={{ marginLeft: '10px' }}>刷题吧</span>
+          <span style={{ fontSize: '16px' }}>刷题吧</span>
         </div>
         <div style={{ padding: '20px' }}>{children}</div>
       </div>
@@ -103,9 +85,14 @@ export default function BasicLayout({ children }: Props) {
       }}
     >
       <ProLayout
-        title="刷题吧"
+        title=""
         layout="top"
-        logo={<Image src="/assets/logo.png" width={32} height={32} alt="面试吧刷题平台" />}
+        logo={
+          <Link href="/" className="flex items-center">
+            <Image src="/assets/logo.png" width={32} height={32} alt="面试吧刷题平台" />
+            <span style={{ fontSize: '16px' }}>刷题吧</span>
+          </Link>
+        }
         location={{
           pathname,
         }}

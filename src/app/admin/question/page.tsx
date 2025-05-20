@@ -1,7 +1,7 @@
 'use client'
 import CreateModal from './components/CreateModal'
 import UpdateModal from './components/UpdateModal'
-import { deleteQuestionBankUsingPost, listQuestionBankByPageUsingPost } from '../../../api/questionBankController'
+import { deleteQuestionUsingPost, listQuestionByPageUsingPost } from '../../../api/questionController'
 import { PlusOutlined } from '@ant-design/icons'
 import type { ActionType, ProColumns } from '@ant-design/pro-components'
 import { PageContainer, ProTable } from '@ant-design/pro-components'
@@ -11,31 +11,36 @@ import React, { useRef, useState } from 'react'
 import UploadPic from '@/components/UploadPic'
 import PICTURE_ENUM from '@/constant/PictureEnum'
 import REVIEW_ENUM, { REVIEW_ENUM_MAP, REVIEW_ENUM_OPTIONS } from '@/constant/REVIEWEnum'
+import TagList from '@/components/TagList'
+import MdEditor from '@/components/MdEditor'
+import UpdateBankModal from './components/UpdateBankModal'
 
 /**
- * 题库管理页面
+ * 题目管理页面
  *
  * @constructor
  */
-const QuestionBankAdminPage: React.FC = () => {
+const QuestionAdminPage: React.FC = () => {
   // 是否显示新建窗口
   const [createModalVisible, setCreateModalVisible] = useState<boolean>(false)
   // 是否显示更新窗口
   const [updateModalVisible, setUpdateModalVisible] = useState<boolean>(false)
+  // 是否显示题目所属题库窗口
+  const [updateBankModalVisible, setUpdateBankModalVisible] = useState<boolean>(false)
   const actionRef = useRef<ActionType>()
-  // 当前题库点击的数据
-  const [currentRow, setCurrentRow] = useState<API.QuestionBank>()
+  // 当前题目点击的数据
+  const [currentRow, setCurrentRow] = useState<API.Question>()
 
   /**
    * 删除节点
    *
    * @param row
    */
-  const handleDelete: PopconfirmProps['onConfirm'] = async (row: API.QuestionBank) => {
+  const handleDelete: PopconfirmProps['onConfirm'] = async (row: API.Question) => {
     const hide = message.loading('正在删除')
     if (!row) return true
     try {
-      await deleteQuestionBankUsingPost({
+      await deleteQuestionUsingPost({
         id: row.id as any,
       })
       hide()
@@ -52,7 +57,7 @@ const QuestionBankAdminPage: React.FC = () => {
   /**
    * 表格列配置
    */
-  const columns: ProColumns<API.QuestionBank>[] = [
+  const columns: ProColumns<API.Question>[] = [
     {
       title: 'id',
       dataIndex: 'id',
@@ -60,38 +65,49 @@ const QuestionBankAdminPage: React.FC = () => {
       hideInForm: true,
     },
     {
+      title: '所属题库',
+      dataIndex: 'questionBankId',
+      valueType: 'text',
+      hideInForm: true,
+      hideInTable: true,
+    },
+    {
       title: '标题',
       dataIndex: 'title',
       valueType: 'text',
     },
+
     {
-      title: '描述',
-      dataIndex: 'description',
-      valueType: 'text',
-    },
-    {
-      title: '头像',
-      dataIndex: 'picture',
-      valueType: 'image',
+      title: '标签',
+      dataIndex: 'tags',
+      valueType: 'select',
+      // 专门为 valueType 为 select的列
       fieldProps: {
-        width: 64,
+        mode: 'tags',
       },
       hideInSearch: true,
+      // 表格渲染
+      render: (_, record) => {
+        const tags = record.tags ? JSON.parse(record.tags) : []
+        return <TagList tags={tags} />
+      },
+    },
+    {
+      title: '内容',
+      dataIndex: 'content',
+      valueType: 'text',
+      hideInSearch: true,
       renderFormItem: (_, { type, defaultRender, ...rest }, form) => {
-        //表单模式渲染【添加和修改】
-        if (type === 'form') {
-          return (
-            <UploadPic
-              initialImageUrl={form.getFieldValue('picture')}
-              onChange={url => {
-                form.setFieldsValue({ picture: url })
-              }}
-              biz={PICTURE_ENUM.USER_AVATAR}
-            />
-          )
-        }
-        // 表格模式渲染
-        return defaultRender(_)
+        return <MdEditor />
+      },
+    },
+    {
+      title: '答案',
+      dataIndex: 'answer',
+      valueType: 'text',
+      hideInSearch: true,
+      renderFormItem: (_, { type, defaultRender, ...rest }, form) => {
+        return <MdEditor />
       },
     },
     {
@@ -112,6 +128,24 @@ const QuestionBankAdminPage: React.FC = () => {
       renderFormItem: (_, { type, defaultRender, ...rest }, form) => {
         return <Select options={REVIEW_ENUM_OPTIONS} placeholder="请选择审核状态" />
       },
+    },
+    {
+      title: '浏览量',
+      dataIndex: 'viewNum',
+      valueType: 'digit',
+      hideInSearch: true,
+    },
+    {
+      title: '点赞数',
+      dataIndex: 'thumbNum',
+      valueType: 'digit',
+      hideInSearch: true,
+    },
+    {
+      title: '收藏数',
+      dataIndex: 'favourNum',
+      valueType: 'digit',
+      hideInSearch: true,
     },
     {
       title: '审核人id',
@@ -181,9 +215,16 @@ const QuestionBankAdminPage: React.FC = () => {
           >
             修改
           </Typography.Link>
-          {/* onConfirm={handleDelete(record)} */}
 
-          <Popconfirm title="是否要删除该题库" description="" onConfirm={() => handleDelete(record)} okText="Yes" cancelText="No">
+          <Typography.Link
+            onClick={() => {
+              setCurrentRow(record)
+              setUpdateBankModalVisible(true)
+            }}
+          >
+            修改所属题库
+          </Typography.Link>
+          <Popconfirm title="是否要删除该题目" description="" onConfirm={() => handleDelete(record)} okText="Yes" cancelText="No">
             <Typography.Link type="danger">删除</Typography.Link>
           </Popconfirm>
         </Space>
@@ -192,7 +233,7 @@ const QuestionBankAdminPage: React.FC = () => {
   ]
   return (
     <PageContainer>
-      <ProTable<API.QuestionBank>
+      <ProTable<API.Question>
         headerTitle={'查询表格'}
         actionRef={actionRef}
         rowKey="id"
@@ -222,12 +263,12 @@ const QuestionBankAdminPage: React.FC = () => {
           const sortField = Object.keys(sort)?.[0]
           const sortOrder = sort?.[sortField] ?? undefined
 
-          const { data, code } = await listQuestionBankByPageUsingPost({
+          const { data, code } = await listQuestionByPageUsingPost({
             ...params,
             sortField,
             sortOrder,
             ...filter,
-          } as API.QuestionBankQueryRequest)
+          } as API.QuestionQueryRequest)
 
           return {
             success: code === 0,
@@ -261,7 +302,15 @@ const QuestionBankAdminPage: React.FC = () => {
           setUpdateModalVisible(false)
         }}
       />
+      <UpdateBankModal
+        questionId={currentRow?.id}
+        tags={currentRow?.tags}
+        visible={updateBankModalVisible}
+        onCancel={() => {
+          setUpdateBankModalVisible(false)
+        }}
+      />
     </PageContainer>
   )
 }
-export default QuestionBankAdminPage
+export default QuestionAdminPage

@@ -35,7 +35,7 @@ const UserLoginPage: React.FC = () => {
   }
 
   return (
-    <div id="userLoginPage" style={{ backgroundColor: token.colorBgContainer }}>
+    <div id="userLoginPage" className="h-full" style={{ backgroundColor: token.colorBgContainer }}>
       <LoginForm form={form} logo={<Image src="/assets/logo.png" alt="logo" width={60} height={60} />} title="面试吧 - 用户登录" subTitle="程序员面试刷题网站" onFinish={doSubmit}>
         <>
           <ProFormText

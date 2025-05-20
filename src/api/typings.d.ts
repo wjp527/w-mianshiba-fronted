@@ -153,6 +153,7 @@ declare namespace API {
   type getQuestionBankVOByIdUsingGETParams = {
     current?: number;
     description?: string;
+    favourNum?: number;
     id?: number;
     needQueryQuestionList?: boolean;
     notId?: number;
@@ -166,8 +167,10 @@ declare namespace API {
     sortField?: string;
     sortOrder?: string;
     tags?: string[];
+    thumbNum?: number;
     title?: string;
     userId?: number;
+    viewNum?: number;
   };
 
   type getQuestionVOByIdUsingGETParams = {
@@ -475,6 +478,7 @@ declare namespace API {
   type QuestionBankQueryRequest = {
     current?: number;
     description?: string;
+    favourNum?: number;
     id?: number;
     needQueryQuestionList?: boolean;
     notId?: number;
@@ -488,8 +492,10 @@ declare namespace API {
     sortField?: string;
     sortOrder?: string;
     tags?: string[];
+    thumbNum?: number;
     title?: string;
     userId?: number;
+    viewNum?: number;
   };
 
   type QuestionBankQuestion = {
@@ -540,10 +546,15 @@ declare namespace API {
   };
 
   type QuestionBankUpdateRequest = {
-    content?: string;
+    description?: string;
     id?: number;
-    tags?: string[];
+    picture?: string;
+    reviewMessage?: string;
+    reviewStatus?: number;
+    reviewTime?: string;
+    reviewerId?: number;
     title?: string;
+    viewNum?: number;
   };
 
   type QuestionBankVO = {
@@ -551,7 +562,7 @@ declare namespace API {
     description?: string;
     id?: number;
     picture?: string;
-    questionPage?: PageQuestion_;
+    questionPage?: PageQuestionVO_;
     reviewMessage?: string;
     reviewStatus?: number;
     reviewTime?: string;
@@ -573,8 +584,8 @@ declare namespace API {
 
   type QuestionQueryRequest = {
     answer?: string;
+    content?: string;
     current?: number;
-    description?: string;
     id?: number;
     notId?: number;
     pageSize?: number;
@@ -587,12 +598,15 @@ declare namespace API {
     searchText?: string;
     sortField?: string;
     sortOrder?: string;
+    tagList?: string[];
     title?: string;
     userId?: number;
   };
 
   type QuestionUpdateRequest = {
-    description?: string;
+    answer?: string;
+    content?: string;
+    favourNum?: number;
     id?: number;
     picture?: string;
     reviewMessage?: string;
@@ -600,6 +614,7 @@ declare namespace API {
     reviewTime?: string;
     reviewerId?: number;
     tags?: string[];
+    thumbNum?: number;
     title?: string;
     userId?: number;
     viewNum?: number;
@@ -609,14 +624,17 @@ declare namespace API {
     answer?: string;
     content?: string;
     createTime?: string;
+    favourNum?: number;
     hasFavour?: boolean;
     hasThumb?: boolean;
     id?: number;
     tagList?: string[];
+    thumbNum?: number;
     title?: string;
     updateTime?: string;
     user?: UserVO;
     userId?: number;
+    viewNum?: number;
   };
 
   type uploadFileUsingPOSTParams = {
@@ -666,6 +684,7 @@ declare namespace API {
     sortField?: string;
     sortOrder?: string;
     unionId?: string;
+    userAccount?: string;
     userName?: string;
     userProfile?: string;
     userRole?: string;

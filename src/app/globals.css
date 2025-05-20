@@ -14,9 +14,14 @@ body {
   max-height: 100vh;
 }
 
+.max-width-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
 /* 全局强制覆盖Ant Design布局内容背景色 */
 .ant-layout-content,
 [class*="ant-layout-content"],
 [class*="ant-pro-layout-content"] {
-  background-color: #fff !important;
+  /* background-color: #eee !important; */
 }
