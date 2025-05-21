@@ -3,10 +3,11 @@ import { Button, Card, List } from 'antd'
 import './index.css'
 import TagList from '../TagList'
 import Link from 'next/link'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import Title from 'antd/es/typography/Title'
 import MdViewer from '../MdViewer'
+import useAddUserSignInRecord from '@/hooks/useAddUserSignInRecord'
 
 interface Props {
   questionBankId?: number
@@ -24,7 +25,10 @@ const QuestionCard = (props: Props) => {
   const { questionBankId, questionId, questionList, cardTitle } = props
   const question = questionList?.find(item => item.id == questionId)
   const [showAnswer, setShowAnswer] = useState(true)
-  console.log(question?.tagList, questionId, questionList, 'question?.tagList')
+
+  // useEffect(() => {
+  useAddUserSignInRecord()
+  // }, [])
   return (
     <div className="question-card">
       <Card

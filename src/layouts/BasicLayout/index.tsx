@@ -1,6 +1,6 @@
 'use client' // 客户端渲染
 import GlobalFooter from '@/components/GlobalFooter'
-import { GithubFilled, LogoutOutlined } from '@ant-design/icons'
+import { GithubFilled, LogoutOutlined, UserOutlined } from '@ant-design/icons'
 import { ProLayout } from '@ant-design/pro-components'
 import { Dropdown, message } from 'antd'
 import Image from 'next/image'
@@ -32,7 +32,9 @@ export default function BasicLayout({ children }: Props) {
   const [mounted, setMounted] = useState(false)
 
   const router = useRouter()
+  // 使用 dispatch 来分发 action
   const dispatch = useDispatch<AppDispatch>()
+  // 使用 useSelector 来获取登录用户信息
   const loginUser = useSelector((state: RootState) => state.loginUser)
 
   // 在客户端挂载后设置状态
@@ -117,6 +119,14 @@ export default function BasicLayout({ children }: Props) {
               <Dropdown
                 menu={{
                   items: [
+                    {
+                      key: 'center',
+                      icon: <UserOutlined />,
+                      label: '个人中心',
+                      onClick: () => {
+                        router.push('/user/center')
+                      },
+                    },
                     {
                       key: 'logout',
                       icon: <LogoutOutlined />,

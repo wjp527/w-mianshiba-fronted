@@ -1,8 +1,10 @@
 'use server'
 import { getQuestionBankVoByIdUsingGet } from '@/api/questionBankController'
 import { getQuestionVoByIdUsingGet } from '@/api/questionController'
+import { addUserSignInUsingPost } from '@/api/userController'
 import QuestionCard from '@/components/QuestionCard'
-import { Flex } from 'antd'
+import { Flex, message } from 'antd'
+import { useEffect } from 'react'
 import { Content } from 'antd/es/layout/layout'
 
 /**
@@ -13,6 +15,7 @@ export default async function BankPage({ params }: { params: { questionId: strin
   const { questionId } = params
 
   let question = undefined
+
   try {
     const res = await getQuestionVoByIdUsingGet({
       id: Number(questionId),

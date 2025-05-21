@@ -11,6 +11,12 @@ declare namespace API {
     message?: string;
   };
 
+  type BaseResponseListInt_ = {
+    code?: number;
+    data?: number[];
+    message?: string;
+  };
+
   type BaseResponseLoginUserVO_ = {
     code?: number;
     data?: LoginUserVO;
@@ -181,6 +187,11 @@ declare namespace API {
   type getUserByIdUsingGETParams = {
     /** id */
     id?: number;
+  };
+
+  type getUserSignInRecordUsingPOSTParams = {
+    /** year */
+    year?: number;
   };
 
   type getUserVOByIdUsingGETParams = {
@@ -661,6 +672,7 @@ declare namespace API {
   type UserAddRequest = {
     userAccount?: string;
     userAvatar?: string;
+    userEmail?: string;
     userName?: string;
     userRole?: string;
   };
@@ -685,6 +697,7 @@ declare namespace API {
     sortOrder?: string;
     unionId?: string;
     userAccount?: string;
+    userEmail?: string;
     userName?: string;
     userProfile?: string;
     userRole?: string;
@@ -699,6 +712,7 @@ declare namespace API {
 
   type UserUpdateMyRequest = {
     userAvatar?: string;
+    userEmail?: string;
     userName?: string;
     userProfile?: string;
   };
@@ -706,6 +720,7 @@ declare namespace API {
   type UserUpdateRequest = {
     id?: number;
     userAvatar?: string;
+    userEmail?: string;
     userName?: string;
     userProfile?: string;
     userRole?: string;

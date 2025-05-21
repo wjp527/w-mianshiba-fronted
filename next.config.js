@@ -5,6 +5,10 @@ const nextConfig = {
   env: {
     DISABLE_ANTD_COMPATIBLE_WARNING: 'true',
   },
+  // 配置图片域名
+  images: {
+    domains: ['localhost', '127.0.0.1', 'https://w-mianshiba-1308962059.cos.ap-nanjing.myqcloud.com'],
+  },
 }
 
 module.exports = nextConfig
