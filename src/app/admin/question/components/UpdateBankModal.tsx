@@ -55,6 +55,7 @@ const UpdateBankModal: React.FC<Props> = props => {
     }
     const res = await listQuestionBankQuestionByPageUsingPost(params)
     const list = (res.data.records ?? []).map(item => item.questionBankId)
+    console.log(list, 'list')
     form.setFieldsValue({
       questionBankId: list,
     })

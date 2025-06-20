@@ -2,13 +2,14 @@
 
 import Title from 'antd/es/typography/Title'
 
-import { Divider, Flex, message } from 'antd'
+import { Divider, Flex } from 'antd'
 import './globals.css'
 import Link from 'next/link'
 import { listQuestionBankVoByPageUsingPost } from '@/api/questionBankController'
 import { listQuestionVoByPageUsingPost } from '@/api/questionController'
 import QuestionBanksList from '@/components/QuestionBanksList'
 import Question from '@/components/Question'
+import ErrorNotification from '@/components/ErrorNotification'
 
 /**
  * 服务端渲染的组件，必须要加async
@@ -17,6 +18,8 @@ import Question from '@/components/Question'
 export default async function HomePage() {
   let questionBankList: any[] = []
   let questionList: any[] = []
+  let errorMessage = ''
+
   try {
     const res = await listQuestionBankVoByPageUsingPost({
       pageSize: 12,
@@ -25,7 +28,7 @@ export default async function HomePage() {
     })
     questionBankList = res.data.records ?? []
   } catch (e) {
-    message.error('获取题库失败: ' + e.message)
+    errorMessage = '获取题库失败: ' + (e as Error).message
   }
 
   try {
@@ -40,6 +43,8 @@ export default async function HomePage() {
 
   return (
     <div id="homePage" className=" max-width-content p-4">
+      <ErrorNotification error={errorMessage} />
+
       <Flex justify="space-between" align="center">
         <Title level={3}>最新题库</Title>
         <Link href="/banks">查看更多</Link>

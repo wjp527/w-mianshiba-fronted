@@ -152,10 +152,10 @@ export default function BasicLayout({ children }: Props) {
         }}
         headerTitleRender={(logo, title, _) => {
           return (
-            <a>
+            <div className="flex items-center">
               {logo}
               {title}
-            </a>
+            </div>
           )
         }}
         footerRender={() => <GlobalFooter />}
